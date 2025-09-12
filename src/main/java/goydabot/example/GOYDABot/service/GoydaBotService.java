@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
 @Component
 public class GoydaBotService extends TelegramLongPollingBot {
@@ -67,6 +68,11 @@ public class GoydaBotService extends TelegramLongPollingBot {
             "CAACAgIAAxkBAAEM84NnvvluYeqDqwrM--DlCS063yQuxwACfksAAm4PqUmnDqxS40zPbzYE"
     };
 
+    private static final Pattern GOYDA_PATTERN = Pattern.compile(
+            "го[ий]д[а-яё]*|хохлы\\s+ответят\\s+за\\s+это",
+            Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE
+    );
+
 
     @Override
     public String getBotUsername() {
@@ -84,7 +90,7 @@ public class GoydaBotService extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText().toLowerCase();
             long chatId = update.getMessage().getChatId();
 
-            if (messageText.contains("ГОЙДА") || messageText.contains("гойда") || messageText.contains("Гойда")) {
+            if (GOYDA_PATTERN.matcher(messageText).find()) {
                 sendRandomSticker(chatId);
             }
         }
